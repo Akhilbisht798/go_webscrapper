@@ -10,6 +10,8 @@ import (
 	"golang.org/x/net/html"
 )
 
+var result []string
+
 /*
 - Search 4 - 5 pages.
 - Give it in a csv format.
@@ -58,6 +60,7 @@ func parse(text string) {
 	var isPrice bool
 	var link string
 	var rating bool
+	res := strings.Builder{}
 	for {
 		tt := htmlTokens.Next()
 		switch tt {
@@ -70,16 +73,18 @@ func parse(text string) {
 			link = getHref(t.Attr, "s1Q9rs")
 			rating = checkForClasses(t.Attr, "_3LWZlK")
 			if len(link) > 1 {
-				fmt.Printf("%s\t", link)
+				res.WriteString(link + ",")
 			}
 			link = ""
 		case html.TextToken:
 			t := htmlTokens.Token()
 			if isPrice {
-				fmt.Println(t)
+				res.WriteString(t.Data)
+				result = append(result, res.String())
+				res.Reset()
 			}
 			if rating {
-				fmt.Printf("%s\t", t)
+				res.WriteString(t.Data + ",")
 			}
 			isPrice = false
 			rating = false
@@ -109,4 +114,5 @@ func main() {
 		getProductInformation(urls, &wg)
 	}
 	wg.Wait()
+	putValueInFile(product)
 }
