@@ -51,11 +51,13 @@ func getHref(attri []html.Attribute, class string) string {
 }
 
 // Item Price && div - _30jeq3
-// Item Link && Anchor tag - _3bPFwb
+// Item Link && Anchor tag - s1Q9rs
+// Item Rating - _3LWZlK
 func parse(text string) {
 	htmlTokens := html.NewTokenizer(strings.NewReader(text))
 	var isPrice bool
 	var link string
+	var rating bool
 	for {
 		tt := htmlTokens.Next()
 		switch tt {
@@ -66,6 +68,7 @@ func parse(text string) {
 			t := htmlTokens.Token()
 			isPrice = checkForClasses(t.Attr, "_30jeq3")
 			link = getHref(t.Attr, "s1Q9rs")
+			rating = checkForClasses(t.Attr, "_3LWZlK")
 			if len(link) > 1 {
 				fmt.Printf("%s\t", link)
 			}
@@ -75,7 +78,11 @@ func parse(text string) {
 			if isPrice {
 				fmt.Println(t)
 			}
+			if rating {
+				fmt.Printf("%s\t", t)
+			}
 			isPrice = false
+			rating = false
 		}
 	}
 }
