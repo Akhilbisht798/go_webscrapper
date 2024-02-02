@@ -79,7 +79,7 @@ func parse(text string) {
 		case html.TextToken:
 			t := htmlTokens.Token()
 			if isPrice {
-				res.WriteString(t.Data)
+				res.WriteString(t.Data + "\n")
 				result = append(result, res.String())
 				res.Reset()
 			}
